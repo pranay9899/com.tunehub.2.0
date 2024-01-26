@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body><a href="/signup">SignUp</a>
+    <div id="forms" class="form">
+        <select id="toggleForm">
+            <option value="user">Sign in as User</option>
+            <option value="admin">Sign in as Admin</option>
+        </select>
+
+        <div id="userlogin" class="form">
+            <form action="/userlogin" method="post">
+                <h1>USER SIGN IN</h1>
+               
+                <label for="user_email">Email: </label>
+                <input type="email" id="email" name="email"><br><br>
+                <label for="userPassword">Password: </label>
+                <input type="password" id="password" name="password"><br><br>
+                <input type="submit" value="Sign In">
+            </form>
+        </div>
+
+        <div id="adminlogin" class="form hidden">
+            <form action="/adminlogin" method="post">
+                <h1>ADMIN SIGN IN</h1>
+                
+                <label for="email">Email: </label>
+                <input type="email" id="email" name="email"><br><br>
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password"><br><br>
+              
+                <input type="submit" value="Sign In">
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('toggleForm').addEventListener('change', function () {
+    var selectedFormId = this.value;
+    document.getElementById('userlogin').classList.add('hidden');
+    document.getElementById('adminlogin').classList.add('hidden');
+
+    if (selectedFormId === 'user') {
+        document.getElementById('userlogin').classList.remove('hidden');
+    } else if (selectedFormId === 'admin') {
+        document.getElementById('adminlogin').classList.remove('hidden');
+    }
+});
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>customplaylist</title>
+<link rel="stylesheet" href="style.css">
+<style type="text/css">
+
+div{
+    display: flex;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+    margin-right: 8px;
+    width: auto;
+}
+.form{
+	align-content: center;
+}
+
+
+</style>
+</head>
+<body>
+	<div class="form" >
+		<form action="createcustomplaylist" method="post" class ="form">
+			<h1>Create PlayList!</h1>
+			<label for="name">Name: </label><input type="text"
+				name="name">
+
+			<div th:each="song: ${songs}">
+				<input type="checkbox" th:name="songs" th:value="${song.id}" class="checking">
+				<label th:text="${song.name}"></label>
+			</div>
+
+			<input type="submit" value="ADD PLAYLIST">
+		</form>
+	</div>
+</body>
+</html>

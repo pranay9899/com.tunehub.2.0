@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="/login">Login</a>
+    <div id="forms" class="form">
+        <select id="toggleForm">
+            <option value="user">Sign Up as User</option>
+            <option value="admin">Sign Up as Admin</option>
+        </select>
+
+        <div id="usersignup" class="form">
+            <form action="/usersignup" method="post">
+                <h1>USER SIGN UP</h1>
+                <label for="name">Name: </label>
+                <input type="text" id="name" name="name"><br><br>
+                <label for="email">Email: </label>
+                <input type="email" id="email" name="email"><br><br>
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password"><br><br>
+                <label for="gender">Gender: </label>
+                <select id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                </select><br><br>
+                <label for="address">Address: </label>
+                <textarea id="address" name="address"></textarea><br><br>
+                <input type="submit" value="Sign Up">
+            </form>
+        </div>
+
+        <div id="adminsignup" class="form hidden">
+            <form action="/adminsignup" method="post">
+                <h1>ADMIN SIGN UP</h1>
+                <label for="name">Name: </label>
+                <input type="text" id="name" name="name"><br><br>
+                <label for="email">Email: </label>
+                <input type="email" id="email" name="email"><br><br>
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password"><br><br>
+                <label for="gender">Gender: </label>
+                <select id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                </select><br><br>
+                <label for="address">Address: </label>
+                <textarea id="address" name="address"></textarea><br><br>
+                <input type="submit" value="Sign Up">
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('toggleForm').addEventListener('change', function () {
+    var selectedFormId = this.value;
+    document.getElementById('usersignup').classList.add('hidden');
+    document.getElementById('adminsignup').classList.add('hidden');
+
+    if (selectedFormId === 'user') {
+        document.getElementById('usersignup').classList.remove('hidden');
+    } else if (selectedFormId === 'admin') {
+        document.getElementById('adminsignup').classList.remove('hidden');
+    }
+});
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>editcustomplaylist</title>
+</head>
+<body>
+	<h1>Edit PlayList!</h1>
+	
+  <form action="/your-submit-action" method="post">
+    <select id="playlist" name="selectedPlaylist">
+        <option th:each="playlist : ${playlists}" th:value="${playlist.id}" th:text="${playlist.name}"></option>
+    </select>
+    </form>
+
+
+</body>
+</html>
