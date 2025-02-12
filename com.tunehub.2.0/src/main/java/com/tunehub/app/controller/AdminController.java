@@ -50,6 +50,7 @@ public class AdminController {
 		}
 		return "admin";
 	}
+	// i have to change the classess and entities from here
 
 	@PostMapping("/adminsignup")
 	public String adminsignup(@ModelAttribute Admin admin, HttpSession session) {
