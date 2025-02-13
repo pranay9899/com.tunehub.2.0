@@ -37,7 +37,7 @@ public class UsersController {
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping
+    @GetMapping("/privateusers")
     public ResponseEntity<List<Users>> getAllUsers() {
         List<Users> users = usersService.getAllUsers();
         return ResponseEntity.ok(users);
