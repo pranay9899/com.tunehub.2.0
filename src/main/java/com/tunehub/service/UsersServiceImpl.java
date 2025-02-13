@@ -2,9 +2,14 @@ package com.tunehub.service;
 
 import com.tunehub.entity.Users;
 import com.tunehub.repository.UserRepository;
+import com.tunehub.service.securityservice.JWTService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.slf4j.Logger; // Import Logger
@@ -15,11 +20,15 @@ import java.util.List;
 @Service // Spring stereotype annotation to mark this class as a service component
 public class UsersServiceImpl implements UsersService {
 
+    private final AuthenticationManager authManager;
+    private final JWTService jwtService;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     private final UserRepository userRepository; // Final for constructor injection - good practice
     private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class); // Explicit Logger declaration
 
-    // Constructor injection for UserRepository (recommended over field injection)
-    public UsersServiceImpl(UserRepository userRepository) {
+    public UsersServiceImpl(AuthenticationManager authManager, JWTService jwtService, UserRepository userRepository) {
+        this.authManager = authManager;
+        this.jwtService = jwtService;
         this.userRepository = userRepository;
     }
 
@@ -54,6 +63,16 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public String validateUser(Users user) {
+        Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        if (auth.isAuthenticated()) {
+            return jwtService.generateToken(user.getEmail());
+        } else {
+            return "fail";
+        }
+    }
+
+    @Override
     public List<Users> getAllUsers() {
         List<Users> users = userRepository.findAll();
         if (users.isEmpty()) {
@@ -68,6 +87,7 @@ public class UsersServiceImpl implements UsersService {
     public ResponseEntity<String> saveUser(Users user) {
         try {
             if (!userRepository.existsByEmail(user.getEmail())) { // Check if email already exists
+                user.setPassword(encoder.encode(user.getPassword()));
                 userRepository.save(user); // Save the new user to the database
                 return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful!"); // Return 201 Created status
             } else {

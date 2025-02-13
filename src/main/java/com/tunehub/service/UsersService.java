@@ -9,6 +9,7 @@ public interface UsersService {
     public Users getUserById(Long id);
     public Users getUserByName(String name);
     public Users getUserByEmail(String email);
+    public String validateUser(Users users);
 
     public List<Users> getAllUsers();
     public ResponseEntity<String> saveUser(Users user);
