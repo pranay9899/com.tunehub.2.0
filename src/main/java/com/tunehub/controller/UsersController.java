@@ -20,27 +20,26 @@ public class UsersController {
     public String login(@RequestBody Users user) {
         return usersService.validateUser(user);
     }
+
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody Users user) {
         return usersService.addUser(user);
+    }
+
+    @PostMapping("/update-account")
+    public ResponseEntity<String> updateUser(@RequestBody Users user) {
+        return usersService.updateUser(user);
     }
 
     @PostMapping("/delete-account")
     public ResponseEntity<String> deleteUser(@RequestBody Users user) {
         return usersService.deleteUser(user);
     }
-    @PostMapping("/update-account")
-    public ResponseEntity<String> updateUser(@RequestBody Users user) {
-        return usersService.updateUser(user);
-    }
-
 
     @GetMapping("/")
     public String home(){
-        return "home";
+        return "welcome to tune hub";
     }
-
-
 
     @GetMapping("/protected-home")
     public String protectedHome(){
