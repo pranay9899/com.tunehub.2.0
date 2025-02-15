@@ -1,9 +1,8 @@
 package com.tunehub.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Users {
@@ -14,15 +13,18 @@ public class Users {
     private String email;
     private String password;
     private Role role;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<CustomPlayLists>  customPlayLists;
     public Users() {
     }
 
-    public Users(Long id, String name, String email, String password, Role role) {
+    public Users(Long id, String name, String email, String password, Role role, List<CustomPlayLists> customPlayLists) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.customPlayLists = customPlayLists;
     }
 
     public Long getId() {
@@ -65,6 +67,14 @@ public class Users {
         this.role = role;
     }
 
+    public List<CustomPlayLists> getCustomPlayLists() {
+        return customPlayLists;
+    }
+
+    public void setCustomPlayLists(List<CustomPlayLists> customPlayLists) {
+        this.customPlayLists = customPlayLists;
+    }
+
     @Override
     public String toString() {
         return "Users{" +
@@ -73,6 +83,7 @@ public class Users {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
+                ", customPlayLists=" + customPlayLists +
                 '}';
     }
 }

@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class UsersController {
 
@@ -22,56 +20,30 @@ public class UsersController {
     public String login(@RequestBody Users user) {
         return usersService.validateUser(user);
     }
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody Users user) {
+        return usersService.addUser(user);
+    }
+
+    @PostMapping("/delete-account")
+    public ResponseEntity<String> deleteUser(@RequestBody Users user) {
+        return usersService.deleteUser(user);
+    }
+    @PostMapping("/update-account")
+    public ResponseEntity<String> updateUser(@RequestBody Users user) {
+        return usersService.updateUser(user);
+    }
+
+
     @GetMapping("/")
     public String home(){
         return "home";
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody Users user) {
-        return usersService.saveUser(user);
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        return usersService.deleteUser(id);
-    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Users> updateUser(@PathVariable Long id, @RequestBody Users userDetails) {
-        Users existingUser = usersService.getUserById(id);
-        existingUser.setName(userDetails.getName());
-        existingUser.setEmail(userDetails.getEmail());
-        existingUser.setPassword(userDetails.getPassword());
-        ResponseEntity<Users> updatedUserResponse = usersService.updateUser(existingUser);
-        return updatedUserResponse;
-    }
-
-    @GetMapping("/protectedhome")
+    @GetMapping("/protected-home")
     public String protectedHome(){
         return "Welcome to protected home";
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Users> getUserById(@PathVariable Long id) {
-        Users user = usersService.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Users> getUserByName(@PathVariable String name) {
-        Users user = usersService.getUserByName(name);
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Users> getUserByEmail(@PathVariable String email) {
-        Users user = usersService.getUserByEmail(email);
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping("/privateusers")
-    public ResponseEntity<List<Users>> getAllUsers() {
-        List<Users> users = usersService.getAllUsers();
-        return ResponseEntity.ok(users);
     }
 }

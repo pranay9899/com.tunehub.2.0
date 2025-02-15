@@ -11,55 +11,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.slf4j.Logger; // Import Logger
-import org.slf4j.LoggerFactory; // Import LoggerFactory
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
 
-@Service // Spring stereotype annotation to mark this class as a service component
+@Service
 public class UsersServiceImpl implements UsersService {
 
     private final AuthenticationManager authManager;
     private final JWTService jwtService;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-    private final UserRepository userRepository; // Final for constructor injection - good practice
-    private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class); // Explicit Logger declaration
+    private final UserRepository userRepository;
+    private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
 
     public UsersServiceImpl(AuthenticationManager authManager, JWTService jwtService, UserRepository userRepository) {
         this.authManager = authManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public Users getUserById(Long id) {
-        // Use Optional to handle potential null from findById
-        return userRepository.findById(id)
-                .orElseThrow(() -> { // Use orElseThrow for cleaner not-found handling
-                    logger.warn("User not found with id: {}", id); // Use logger.warn for logging - user not found is not critical error
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"); // Throw 404 Not Found exception
-                });
-    }
-
-    @Override
-    public Users getUserByName(String name) {
-        Users user = userRepository.findByName(name); // Assuming 'findByName' is correctly defined in UserRepository
-        if (user == null) {
-            logger.warn("User not found with name: {}", name); // Use logger.warn for logging
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"); // Throw 404 Not Found
-        }
-        return user;
-    }
-
-    @Override
-    public Users getUserByEmail(String email) {
-        Users user = userRepository.findByEmail(email);
-        if (user == null) {
-            logger.warn("User not found with email: {}", email); // Use logger.warn for logging
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"); // Throw 404 Not Found
-        }
-        return user;
     }
 
     @Override
@@ -73,61 +41,52 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public List<Users> getAllUsers() {
-        List<Users> users = userRepository.findAll();
-        if (users.isEmpty()) {
-            logger.info("No users found in database."); // Use logger.info for logging - normal situation, not an error
-            return List.of(); // Return empty list instead of null - better for client handling
-        }
-        return users;
-    }
-
-    @Override
-    @Transactional // Mark as transactional - important for data consistency
-    public ResponseEntity<String> saveUser(Users user) {
+    @Transactional
+    public ResponseEntity<String> addUser(Users user) {
         try {
-            if (!userRepository.existsByEmail(user.getEmail())) { // Check if email already exists
+            if (!userRepository.existsByEmail(user.getEmail())) {
                 user.setPassword(encoder.encode(user.getPassword()));
-                userRepository.save(user); // Save the new user to the database
-                return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful!"); // Return 201 Created status
+                userRepository.save(user);
+                return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful!");
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists!"); // Return 409 Conflict status - email already taken
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists!");
             }
         } catch (Exception e) {
-            logger.error("Error during user registration", e); // Use logger.error for logging - error for debugging and monitoring
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed!"); // Return 500 Internal Server Error for unexpected issues
+            logger.error("Error during user registration", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed!");
         }
     }
 
     @Override
-    @Transactional // Mark as transactional - ensures atomicity of delete operation
-    public ResponseEntity<String> deleteUser(Long userId) {
+    @Transactional
+    public ResponseEntity<String> deleteUser(Users user) {
+        Long userId = user.getId();
         try {
-            if (!userRepository.existsById(userId)) { // Check if user exists before deleting
-                logger.warn("Attempted to delete non-existent user with ID: {}", userId); // Use logger.warn for logging - attempt to delete non-existent user
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for deletion."); // Return 404 Not Found if user doesn't exist
+            if (!userRepository.existsById(userId)) {
+                logger.warn("Attempted to delete non-existent user with ID: {}", userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for deletion.");
             }
-            userRepository.deleteById(userId); // Delete user by ID
-            return ResponseEntity.noContent().build(); // Return 204 No Content - successful deletion, nobody needed
+            userRepository.deleteById(userId);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            logger.error("Error deleting user with ID: {}", userId, e); // Use logger.error for logging - error details including userId and exception
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user."); // Return 500 Internal Server Error for unexpected issues
+            logger.error("Error deleting user with ID: {}", userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user.");
         }
     }
 
     @Override
-    @Transactional // Mark as transactional - ensures atomicity of update operation
-    public ResponseEntity<Users> updateUser(Users user) {
+    @Transactional
+    public ResponseEntity<String> updateUser(Users user) {
         try {
-            if (!userRepository.existsById(user.getId())) { // Check if user exists before updating
-                logger.warn("Attempted to update non-existent user with ID: {}", user.getId()); // Use logger.warn for logging - attempt to update non-existent user
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user doesn't exist
+            if (!userRepository.existsById(user.getId())) {
+                logger.warn("Attempted to update non-existent user with ID: {}", user.getId());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
-            Users updatedUser = userRepository.save(user); // Save method updates if entity with ID exists, inserts if not
-            return ResponseEntity.ok(updatedUser); // Return 200 OK and the updated user in the response body
+            userRepository.save(user);
+            return ResponseEntity.ok("User updated successfully");
         } catch (Exception e) {
-            logger.error("Error updating user with ID: {}", user.getId(), e); // Use logger.error for logging - error details including userId and exception
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Return 500 Internal Server Error for unexpected issues
+            logger.error("Error updating user with ID: {}", user.getId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user");
         }
     }
 }
