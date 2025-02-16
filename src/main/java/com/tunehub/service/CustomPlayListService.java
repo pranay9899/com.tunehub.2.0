@@ -1,12 +1,13 @@
 package com.tunehub.service;
 
 import com.tunehub.entity.CustomPlayLists;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface CustomPlayListService {
-    String addCustomPlaylist(CustomPlayLists customPlayLists);
+    ResponseEntity<String> createCustomPlaylist(CustomPlayLists customPlayLists);
     List<CustomPlayLists> getAllCustomPlayListsByUserId();
-    String deleteCustomPlayList(Long customPlayListId);
-    String updateCustomPlayList(CustomPlayLists playLists);
+    ResponseEntity<String> deleteCustomPlayList(Long customPlayListId);
+    ResponseEntity<String> updateCustomPlayList(CustomPlayLists playLists);
 }

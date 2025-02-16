@@ -2,6 +2,8 @@ package com.tunehub.service;
 
 import com.tunehub.entity.CustomPlayLists;
 import com.tunehub.repository.CustomPlayListRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -24,13 +26,13 @@ public class CustomPlayListServiceImpl implements CustomPlayListService {
 
     @Override
     @Transactional
-    public String addCustomPlaylist(CustomPlayLists customPlayLists) {
+    public ResponseEntity<String> createCustomPlaylist(CustomPlayLists customPlayLists) {
         try {
             customPlayListRepository.save(customPlayLists);
-            return "Custom playlist added successfully.";
+            return ResponseEntity.status(HttpStatus.CREATED).body("Custom playlist created successfully!");
         } catch (Exception e) {
-            logger.error("Error adding custom playlist", e);
-            return "Failed to add custom playlist.";
+            logger.error("Error in creating custom playlist", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create custom playlist.");
         }
     }
 
@@ -48,34 +50,36 @@ public class CustomPlayListServiceImpl implements CustomPlayListService {
 
     @Override
     @Transactional
-    public String deleteCustomPlayList(Long customPlayListId) {
+    public ResponseEntity<String> deleteCustomPlayList(Long customPlayListId) {
         try {
             if (customPlayListRepository.existsById(customPlayListId)) {
                 customPlayListRepository.deleteById(customPlayListId);
-                return "Custom playlist deleted successfully.";
+                logger.info("Custom playlist deleted successfully with ID: {}", customPlayListId);
+                return ResponseEntity.noContent().build();
             } else {
-                logger.warn("Custom playlist with ID {} not found.", customPlayListId);
-                return "Custom playlist not found.";
+                logger.warn("Custom playlist with ID {} not found for deletion.", customPlayListId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Custom playlist with ID " + customPlayListId + " not found."); // Include ID in message
             }
         } catch (Exception e) {
             logger.error("Error deleting custom playlist with ID {}", customPlayListId, e);
-            return "Failed to delete custom playlist.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete custom playlist."); // Corrected message for delete failure
+        }
+    }
+    @Override
+    @Transactional
+    public ResponseEntity<String> updateCustomPlayList(CustomPlayLists playLists) {
+        try {
+            if (!customPlayListRepository.existsById(playLists.getId())) {
+                logger.warn("Custom playlist with ID {} not found for update.", playLists.getId());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Custom playlist with ID " + playLists.getId() + " not found for update."); // Corrected to 404 Not Found
+            }
+            customPlayListRepository.save(playLists);
+            logger.info("Custom playlist updated successfully with ID: {}", playLists.getId());
+            return ResponseEntity.ok("Custom playlist updated successfully!");
+        } catch (Exception e) {
+            logger.error("Error updating custom playlist with ID {}", playLists.getId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update custom playlist."); // Corrected error message for update
         }
     }
 
-    @Override
-    @Transactional
-    public String updateCustomPlayList(CustomPlayLists playLists) {
-        try {
-            if (!customPlayListRepository.existsById(playLists.getId())) {
-                logger.warn("Custom playlist with ID {} not found.", playLists.getId());
-                return "Custom playlist not found.";
-            }
-            customPlayListRepository.save(playLists);
-            return "Custom playlist updated successfully.";
-        } catch (Exception e) {
-            logger.error("Error updating custom playlist with ID {}", playLists.getId(), e);
-            return "Failed to update custom playlist.";
-        }
-    }
 }

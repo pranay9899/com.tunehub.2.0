@@ -3,8 +3,6 @@ package com.tunehub.service;
 import com.tunehub.entity.Users;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 public interface UsersService {
 
     String validateUser(Users users);
