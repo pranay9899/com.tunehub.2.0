@@ -6,12 +6,14 @@ import com.tunehub.service.CustomPlayListService;
 import com.tunehub.service.PlayListService;
 import com.tunehub.service.UsersServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@PreAuthorize("hasRole('USER')")
 public class UsersController {
     CustomPlayListService customPlayListService;
     PlayListService playListService;
