@@ -18,7 +18,6 @@ public class SongServiceImpl implements SongService{
     private final SongRepository songRepository;
     private static final Logger logger = LoggerFactory.getLogger(SongServiceImpl.class);
 
-    @Autowired
     public SongServiceImpl(SongRepository songRepository) {
         this.songRepository = songRepository;
     }

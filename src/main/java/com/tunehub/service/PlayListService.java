@@ -1,6 +1,5 @@
 package com.tunehub.service;
 
-import com.tunehub.entity.CustomPlayLists;
 import com.tunehub.entity.PlayLists;
 import org.springframework.http.ResponseEntity;
 

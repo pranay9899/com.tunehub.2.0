@@ -15,7 +15,6 @@ public class SongsController {
 
     private final SongService songService;
 
-    @Autowired
     public SongsController(SongService songService) {
         this.songService = songService;
     }
