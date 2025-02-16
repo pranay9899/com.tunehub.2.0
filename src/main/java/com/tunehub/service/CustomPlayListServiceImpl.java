@@ -1,10 +1,7 @@
 package com.tunehub.service;
 
-import com.tunehub.configuration.UsersPrincipal;
 import com.tunehub.entity.CustomPlayLists;
 import com.tunehub.repository.CustomPlayListRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -13,6 +10,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+
 @Service
 public class CustomPlayListServiceImpl implements CustomPlayListService {
 
