@@ -9,7 +9,7 @@ public class CustomPlayLists {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String name;
+    String customPLayListName;
     String description;
     String image;
     String link;
@@ -19,9 +19,9 @@ public class CustomPlayLists {
     public CustomPlayLists() {
     }
 
-    public CustomPlayLists(Long id, String name, String description, String image, String link, List<Songs> songs) {
+    public CustomPlayLists(Long id, String customPLayListName, String description, String image, String link, List<Songs> songs) {
         this.id = id;
-        this.name = name;
+        this.customPLayListName = customPLayListName;
         this.description = description;
         this.image = image;
         this.link = link;
@@ -36,12 +36,12 @@ public class CustomPlayLists {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomPLayListName() {
+        return customPLayListName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomPLayListName(String customPLayListName) {
+        this.customPLayListName = customPLayListName;
     }
 
     public String getDescription() {
@@ -80,7 +80,7 @@ public class CustomPlayLists {
     public String toString() {
         return "CustomPlayLists{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", customPLayListName='" + customPLayListName + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
                 ", link='" + link + '\'' +

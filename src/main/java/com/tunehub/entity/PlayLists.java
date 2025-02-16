@@ -9,7 +9,7 @@ public class PlayLists {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
-    String name;
+    String playLIstName;
     String description;
     String  image;
     String link;
@@ -19,9 +19,9 @@ public class PlayLists {
     public PlayLists() {
     }
 
-    public PlayLists(Long id, String name, String description, String image, String link, List<Songs> songs) {
+    public PlayLists(Long id, String playLIstName, String description, String image, String link, List<Songs> songs) {
         this.id = id;
-        this.name = name;
+        this.playLIstName = playLIstName;
         this.description = description;
         this.image = image;
         this.link = link;
@@ -36,12 +36,12 @@ public class PlayLists {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getPlayLIstName() {
+        return playLIstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPlayLIstName(String playLIstName) {
+        this.playLIstName = playLIstName;
     }
 
     public String getDescription() {
@@ -80,7 +80,7 @@ public class PlayLists {
     public String toString() {
         return "PlayLists{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", playLIstName='" + playLIstName + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
                 ", link='" + link + '\'' +
