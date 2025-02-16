@@ -18,8 +18,8 @@ public class CustomPlayListServiceImpl implements CustomPlayListService {
 
     private final CustomPlayListRepository customPlayListRepository;
     private final Logger logger = LoggerFactory.getLogger(CustomPlayListServiceImpl.class);
+    UsersServiceImpl usersService;
 
-    // Inject the repository via constructor
     public CustomPlayListServiceImpl(CustomPlayListRepository customPlayListRepository) {
         this.customPlayListRepository = customPlayListRepository;
     }
@@ -40,8 +40,8 @@ public class CustomPlayListServiceImpl implements CustomPlayListService {
     @Transactional
     public List<CustomPlayLists> getAllCustomPlayListsByUserId() {
         try {
-            String email = getCurrentUserEmail();
-            return customPlayListRepository.findAllByEmail(email);
+            Long id = usersService.getCurrentUserId();
+            return customPlayListRepository.findAllByUsers_Id(id);
         } catch (Exception e) {
             logger.error("Error fetching custom playlists for user", e);
             return Collections.emptyList();
@@ -79,16 +79,5 @@ public class CustomPlayListServiceImpl implements CustomPlayListService {
             logger.error("Error updating custom playlist with ID {}", playLists.getId(), e);
             return "Failed to update custom playlist.";
         }
-    }
-
-    public String getCurrentUserEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UsersPrincipal) {
-                return ((UsersPrincipal) principal).getUsername();
-            }
-        }
-        return null;
     }
 }

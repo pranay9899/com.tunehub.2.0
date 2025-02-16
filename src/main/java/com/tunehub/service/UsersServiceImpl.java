@@ -1,5 +1,6 @@
 package com.tunehub.service;
 
+import com.tunehub.configuration.UsersPrincipal;
 import com.tunehub.entity.Users;
 import com.tunehub.repository.UserRepository;
 import com.tunehub.service.securityservice.JWTService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -88,5 +90,15 @@ public class UsersServiceImpl implements UsersService {
             logger.error("Error updating user with ID: {}", user.getId(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user");
         }
+    }
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UsersPrincipal) {
+                return userRepository.findByEmail(((UsersPrincipal)principal).getUsername()).getId();
+            }
+        }
+        return null;
     }
 }

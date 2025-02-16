@@ -15,17 +15,20 @@ public class CustomPlayLists {
     String link;
     @ManyToMany
     List<Songs> songs;
+    @ManyToMany
+    List<Users> users;
 
     public CustomPlayLists() {
     }
 
-    public CustomPlayLists(Long id, String customPLayListName, String description, String image, String link, List<Songs> songs) {
+    public CustomPlayLists(Long id, String customPLayListName, String description, String image, String link, List<Songs> songs, List<Users> users) {
         this.id = id;
         this.customPLayListName = customPLayListName;
         this.description = description;
         this.image = image;
         this.link = link;
         this.songs = songs;
+        this.users = users;
     }
 
     public Long getId() {
@@ -74,6 +77,14 @@ public class CustomPlayLists {
 
     public void setSongs(List<Songs> songs) {
         this.songs = songs;
+    }
+
+    public List<Users> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Users> users) {
+        this.users = users;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class Users {
     private String email;
     private String password;
     private Role role;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<CustomPlayLists>  customPlayLists;
     public Users() {
     }

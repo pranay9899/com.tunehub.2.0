@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CustomPlayListRepository extends JpaRepository<CustomPlayLists, Long> {
-    List<CustomPlayLists> findAllByEmail(String email);
-    List<CustomPlayLists> findAllByCustomPLayListNameAndEmail(String customPLayListName, String email);
+    List<CustomPlayLists> findAllByUsers_Id(Long id);
 }
