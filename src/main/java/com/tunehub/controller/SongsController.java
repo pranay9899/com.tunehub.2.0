@@ -2,9 +2,9 @@ package com.tunehub.controller;
 
 import com.tunehub.entity.Songs;
 import com.tunehub.service.SongService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +20,14 @@ public class SongsController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Songs> createSong(@RequestBody Songs song) {
         Songs createdSong = songService.addSong(song);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdSong);
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Songs> updateSong(@RequestBody Songs song) {
         if (song.getId() == null) {
             return ResponseEntity.badRequest().body(null);
@@ -39,6 +41,7 @@ public class SongsController {
     }
 
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteSong(@RequestBody Songs song) {
         if (song.getId() == null) {
             return ResponseEntity.badRequest().build();
