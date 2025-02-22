@@ -46,4 +46,9 @@ public class UserSecurityController {
     public String protectedHome(){
         return "Welcome to protected home";
     }
+
+    @GetMapping("/logout")
+    public String logout(){
+        return "logout";
+    }
 }
