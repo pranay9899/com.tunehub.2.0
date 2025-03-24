@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.io.Decoders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,11 @@ import java.util.function.Function;
 public class JWTService {
 
     private final String secret;
+    public JWTService(@Value("${jwt.secret}") String secret) {
 
+        this.secret = secret;
+    }
+/*
     public JWTService() {
 
         try {
@@ -31,7 +36,7 @@ public class JWTService {
             throw new RuntimeException(e);
         }
     }
-
+*/
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
@@ -39,7 +44,7 @@ public class JWTService {
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
+                .expiration(new Date(System.currentTimeMillis() + 30 * 60 * 60 * 1000))
                 .and()
                 .signWith(getKey())
                 .compact();

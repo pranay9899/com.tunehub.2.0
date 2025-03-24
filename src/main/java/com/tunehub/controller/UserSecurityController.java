@@ -18,7 +18,7 @@ public class UserSecurityController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Users user) {
+    public ResponseEntity<?> login(@RequestBody Users user) { // response
         return usersService.validateUser(user);
     }
 

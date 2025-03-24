@@ -1,5 +1,6 @@
 package com.tunehub.service;
 
+import com.tunehub.configuration.LoginResponse;
 import com.tunehub.configuration.UsersPrincipal;
 import com.tunehub.entity.Users;
 import com.tunehub.repository.UserRepository;
@@ -33,12 +34,12 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public String validateUser(Users user) {
+    public ResponseEntity<?> validateUser(Users user) { //response
         Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         if (auth.isAuthenticated()) {
-            return jwtService.generateToken(user.getEmail());
+            return ResponseEntity.ok(new LoginResponse(jwtService.generateToken(user.getEmail()))); // Return token in LoginResponse
         } else {
-            return "fail";
+            return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
 

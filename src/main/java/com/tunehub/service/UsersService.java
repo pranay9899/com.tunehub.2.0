@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface UsersService {
 
-    String validateUser(Users users);
+    ResponseEntity<?> validateUser(Users users); // response
     ResponseEntity<String> addUser(Users user);
     ResponseEntity<String> deleteUser(Users user);
     ResponseEntity<String> updateUser(Users user);
