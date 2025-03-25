@@ -20,8 +20,9 @@ public class CustomPlayListServiceImpl implements CustomPlayListService {
     private final Logger logger = LoggerFactory.getLogger(CustomPlayListServiceImpl.class);
     UsersServiceImpl usersService;
 
-    public CustomPlayListServiceImpl(CustomPlayListRepository customPlayListRepository) {
+    public CustomPlayListServiceImpl(CustomPlayListRepository customPlayListRepository, UsersServiceImpl usersService) {
         this.customPlayListRepository = customPlayListRepository;
+        this.usersService = usersService;
     }
 
     @Override
